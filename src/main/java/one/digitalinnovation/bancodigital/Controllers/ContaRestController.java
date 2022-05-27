@@ -20,7 +20,7 @@ public class ContaRestController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Object> buscarPorId(@PathVariable long id) throws Exception {
+    public ResponseEntity<Object> buscarPorId(@PathVariable long id) {
         try {
             return new ResponseEntity<>(contaService.buscarPorID(id), HttpStatus.OK);
         }
@@ -29,10 +29,10 @@ public class ContaRestController {
         }
     }
 
-    @PostMapping("/{agenciaID}/{clienteID}")
-    public ResponseEntity<Object> inserir(@PathVariable long agenciaID, @PathVariable long clienteID) throws Exception {
+    @PostMapping("/{agenciaID}/{clienteID}/{tipo_conta}")
+    public ResponseEntity<Object> inserir(@PathVariable long agenciaID, @PathVariable long clienteID, @PathVariable String tipo_conta) {
         try {
-            return new ResponseEntity<>(contaService.inserir(agenciaID, clienteID), HttpStatus.OK);
+            return new ResponseEntity<>(contaService.inserir(agenciaID, clienteID, tipo_conta), HttpStatus.OK);
         }
         catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
@@ -40,7 +40,7 @@ public class ContaRestController {
     }
 
     @PutMapping("/{contaID}")
-    public ResponseEntity<Object> atualizar(@PathVariable long contaID, @RequestBody Conta conta) throws Exception {
+    public ResponseEntity<Object> atualizar(@PathVariable long contaID, @RequestBody Conta conta) {
         try {
             return new ResponseEntity<>(contaService.atualizar(contaID, conta), HttpStatus.OK);
         }
@@ -50,7 +50,7 @@ public class ContaRestController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Object> excluir(@PathVariable long id) throws Exception {
+    public ResponseEntity<Object> excluir(@PathVariable long id) {
         try {
             return new ResponseEntity<>(contaService.excluir(id), HttpStatus.OK);
         }

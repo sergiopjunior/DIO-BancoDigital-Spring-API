@@ -37,8 +37,11 @@ public class ContaServiceImpl implements ContaService {
     }
 
     @Override
-    public Object inserir(long agenciaID, long clienteID) throws Exception{
-        return salvarConta(agenciaID, clienteID, new Conta());
+    public Object inserir(long agenciaID, long clienteID, String tipo_conta) throws Exception{
+        Conta conta = new Conta();
+        conta.setTipoConta(tipo_conta.equalsIgnoreCase("c") ? "Corrente" : "Poupança");
+
+        return salvarConta(agenciaID, clienteID, conta);
     }
 
     @Override
@@ -69,9 +72,9 @@ public class ContaServiceImpl implements ContaService {
         if (cliente.isEmpty())
             throw new ClienteException(clienteID);
 
-        conta.setNumero();
         conta.setAgencia(agencia.get());
         conta.setCliente(cliente.get());
+        conta.Setup();
         contaRepositorio.save(conta);
         return conta;
     }

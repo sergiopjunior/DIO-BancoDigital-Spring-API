@@ -54,9 +54,4 @@ public class Agencia {
 
         return this;
     }
-
-    @Override
-    public String toString() {
-        return String.valueOf(new ResponseEntity<>(this, HttpStatus.OK).getBody());
-    }
 }

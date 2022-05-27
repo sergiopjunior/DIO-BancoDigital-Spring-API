@@ -14,10 +14,10 @@ public class Conta implements IConta {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long ID;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     private Cliente cliente;
     private String numero;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     private Agencia agencia;
     private String tipo_conta;
     private double saldo;
@@ -43,6 +43,7 @@ public class Conta implements IConta {
             this.taxa_transferencia = 0.7;
             this.taxa_saque = 5;
         }
+        setNumero();
     }
 
     public long getID() {
@@ -158,7 +159,6 @@ public class Conta implements IConta {
 
     public Conta atualizar(Conta conta) {
         setTipoConta(conta.getTipoConta());
-        setNumero();
         Setup();
 
         return this;
@@ -166,11 +166,6 @@ public class Conta implements IConta {
 
     @Override
     public int hashCode() {
-        return (int) (this.tipo_conta.hashCode() + this.agencia.getID() + this.cliente.getID() + this.ID);
-    }
-
-    @Override
-    public String toString() {
-        return String.valueOf(new ResponseEntity<>(this, HttpStatus.OK).getBody());
+        return Math.abs((int) (this.tipo_conta.hashCode() + this.agencia.getID() + this.cliente.getID() + this.ID));
     }
 }

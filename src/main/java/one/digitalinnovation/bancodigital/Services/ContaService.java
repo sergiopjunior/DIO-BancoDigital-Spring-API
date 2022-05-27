@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 public interface ContaService {
     Iterable<Conta> listarTodos();
     Object buscarPorID(long ID) throws Exception;
-    Object inserir(long agenciaID, long clienteID) throws Exception;
+    Object inserir(long agenciaID, long clienteID, String tipo_conta) throws Exception;
     Object atualizar(long ID, Conta conta) throws Exception;
-    Object excluir(long ID) throws Exception
+    Object excluir(long ID) throws Exception;
 }

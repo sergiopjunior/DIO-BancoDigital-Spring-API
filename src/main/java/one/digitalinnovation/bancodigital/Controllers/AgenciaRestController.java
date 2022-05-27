@@ -48,13 +48,14 @@ public class AgenciaRestController {
         }
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Object> excluir(@PathVariable long id) {
-        try {
-            return new ResponseEntity<>(agenciaService.excluir(id), HttpStatus.OK);
-        }
-        catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
-        }
-    }
+    // Desativado por regra de negócio
+//    @DeleteMapping("/{id}")
+//    public ResponseEntity<Object> excluir(@PathVariable long id) {
+//        try {
+//            return new ResponseEntity<>(agenciaService.excluir(id), HttpStatus.OK);
+//        }
+//        catch (Exception e) {
+//            return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
+//        }
+//    }
 }

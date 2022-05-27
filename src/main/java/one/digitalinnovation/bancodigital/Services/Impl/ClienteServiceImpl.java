@@ -15,7 +15,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import com.google.gson.Gson;
 import java.util.Optional;
 
 @Service
@@ -26,6 +25,16 @@ public class ClienteServiceImpl implements ClienteService {
     private EnderecoRepositorio enderecoRepositorio;
     @Autowired
     private ViaCepService viaCepService;
+
+    private Endereco findEnderecoByCep(String cep) {
+        Iterable<Endereco> enderecos = enderecoRepositorio.findAll();
+        for (Endereco e: enderecos){
+            if (e.getCep().equalsIgnoreCase(cep))
+                return e;
+        }
+        return null;
+    }
+
     @Override
     public Iterable<Cliente> listarTodos() {
         return clienteRepositorio.findAll();
@@ -67,22 +76,20 @@ public class ClienteServiceImpl implements ClienteService {
     private Object salvarCliente(Cliente cliente) throws Exception {
        if (!Utils.validarCPF(cliente.getCPF()))
            throw new CpfInvalidoException(cliente.getCPF());
+
         String cep = cliente.getEndereco().getCep();
-        Endereco endereco = enderecoRepositorio.findById(cep).orElseGet(() -> {
+
+        Endereco endereco = findEnderecoByCep(cep);
+        if (endereco == null) {
             try {
-                Endereco novo_endereco = viaCepService.consultarCep(cep);
-                enderecoRepositorio.save(novo_endereco);
-                return novo_endereco;
+                    endereco = viaCepService.consultarCep(cep);
+                    endereco.setCep(endereco.getCep().replace("-", ""));
+            } catch (Exception e) {
+                    throw new CepInvalidoException(cep);
             }
-            catch (Exception e) {
-              return null;
-            }
-        });
+        }
 
-        if (endereco == null)
-            throw new CepInvalidoException(cep);
-
-        cliente.setEndereco(endereco);
+        cliente.setEndereco(endereco); // CascadeType.PERSIST salva o Cliente persistindo o Endereço
         clienteRepositorio.save(cliente);
         return cliente;
     }

@@ -13,7 +13,7 @@ public class Cliente {
     private String nome;
     private String cpf;
     private int idade;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     private Endereco endereco;
 
     public long getID() {
