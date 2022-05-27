@@ -1,12 +1,7 @@
 package one.digitalinnovation.bancodigital.Services.Impl;
 
-import one.digitalinnovation.bancodigital.Controllers.Exceptions.CepInvalidoException;
-import one.digitalinnovation.bancodigital.Controllers.Exceptions.ClienteException;
-import one.digitalinnovation.bancodigital.Controllers.Exceptions.CpfInvalidoException;
-import one.digitalinnovation.bancodigital.Models.Cliente;
-import one.digitalinnovation.bancodigital.Models.ClienteRepositorio;
-import one.digitalinnovation.bancodigital.Models.Endereco;
-import one.digitalinnovation.bancodigital.Models.EnderecoRepositorio;
+import one.digitalinnovation.bancodigital.Controllers.Exceptions.*;
+import one.digitalinnovation.bancodigital.Models.*;
 import one.digitalinnovation.bancodigital.Services.ClienteService;
 import one.digitalinnovation.bancodigital.Services.ViaCepService;
 import one.digitalinnovation.bancodigital.Utils.Utils;
@@ -15,12 +10,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
 public class ClienteServiceImpl implements ClienteService {
     @Autowired
     private ClienteRepositorio clienteRepositorio;
+    @Autowired
+    private ContaRepositorio contaRepositorio;
     @Autowired
     private EnderecoRepositorio enderecoRepositorio;
     @Autowired
@@ -33,6 +32,18 @@ public class ClienteServiceImpl implements ClienteService {
                 return e;
         }
         return null;
+    }
+
+    private List<Conta> findClienteContas(long clienteID) {
+        Iterable<Conta> contas = contaRepositorio.findAll();
+        List<Conta> cliente_contas = new ArrayList<>();
+
+        for (Conta c: contas) {
+            if (c.getCliente().getID() == clienteID)
+                cliente_contas.add(c);
+        }
+
+        return cliente_contas;
     }
 
     @Override
@@ -68,6 +79,10 @@ public class ClienteServiceImpl implements ClienteService {
         Optional<Cliente> cliente = clienteRepositorio.findById(ID);
         if (cliente.isEmpty())
             throw new ClienteException(ID);
+
+        List<Conta> cliente_contas = findClienteContas(cliente.get().getID());
+        if (!cliente_contas.isEmpty())
+            throw new ContasAbertasExcpetion(cliente_contas);
 
         clienteRepositorio.deleteById(ID);
         return cliente.get();

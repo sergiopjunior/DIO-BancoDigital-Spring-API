@@ -13,7 +13,7 @@
 	<artifactId>banco-digital-spring</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>banco-digital-spring</name>
-	<description>DIO-BancoDigital Versão Spring Framework</description>
+	<description>DIO-BancoDigital-REST-API com Spring Framework</description>
 	
 	<properties>
 		<java.version>18</java.version>

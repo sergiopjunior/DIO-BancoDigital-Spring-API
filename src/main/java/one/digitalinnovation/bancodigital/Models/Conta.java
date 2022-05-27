@@ -168,4 +168,11 @@ public class Conta implements IConta {
     public int hashCode() {
         return Math.abs((int) (this.tipo_conta.hashCode() + this.agencia.getID() + this.cliente.getID() + this.ID));
     }
+
+    @Override
+    public String toString() {
+        return String.format("Nº: %s - Agência: %s - Agência Nº: %s - Titular: %s - Titular CPF: %s - Tipo: %s - Saldo: R$%.2f",
+                this.numero, this.agencia.getNome(), this.agencia.getNumero(),
+                this.cliente.getNome(), this.cliente.getCPF(), this.tipo_conta, this.saldo);
+    }
 }
